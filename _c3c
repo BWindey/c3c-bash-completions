@@ -1,0 +1,310 @@
+#compdef _c3c c3c
+
+# Turn a string into an argument that can be completed with the options given as remaining parameters
+function c3c_multi_option {
+	if [[ $# -lt 1 ]]; then
+		echo ""
+		return
+	fi
+
+	local result="--$1=: :("
+	shift
+	local arr=("$@")
+
+	for item in "${arr[@]}"; do
+		result+="$item "
+	done
+
+	echo "${result%?})"
+}
+
+# Turn a string into an argument that can be completed with either "yes" or "no"
+function c3c_toggle_option {
+	c3c_multi_option "$1" "yes" "no"
+}
+
+# Turn a string into an argument that can be completed with a directory
+function c3c_dir_option {
+	if [[ $# -lt 1 ]]; then
+		echo ""
+		return
+	fi
+
+	echo "--$1:directory:_files -/"
+}
+
+# Get the targets of a project
+function c3c_get_targets {
+	c3c project view --targets 2>/dev/null
+}
+
+# Get the supported target platforms of c3c
+function c3c_get_platforms {
+	c3c --list-targets |
+		tail -n +2 |
+		sed "s/^ *\([^ ]*\) *$/\1/" |
+		tr '\n' ' '
+}
+
+# All subcomands offered by c3c
+c3c_subcommands=(
+	"compile"
+	"init"
+	"init-lib"
+	"build"
+	"benchmark"
+	"test"
+	"clean"
+	"run"
+	"dist"
+	"clean-run"
+	"compile-run"
+	"compile-only"
+	"compile-benchmark"
+	"compile-test"
+	"static-lib"
+	"dynamic-lib"
+	"vendor-fetch"
+	"project"
+)
+
+# Options that can be completed without arguments
+c3c_simple_options=(
+	"-o::"
+	"-::"
+	"-h"
+	"-hh"
+	"--help"
+	"-V"
+	"--version"
+	"-q"
+	"--quiet"
+	"-v"
+	"-vv"
+	"-vvv"
+	"-E"
+	"-P"
+	"-C"
+	"-O0"
+	"-O1"
+	"-O2"
+	"-O3"
+	"-O4"
+	"-O5"
+	"-Os"
+	"-Oz"
+	"-D"
+	"-U"
+	"--about"
+	"--build-env"
+	"--lib"
+	"--sources"
+	"--no-entry"
+	"--template"
+	"--symtab"
+	"--run-once"
+	"--suppress-run"
+	"--emit-llvm"
+	"--emit-asm"
+	"--obj"
+	"--no-obj"
+	"--no-headers"
+	"--threads"
+	"--lsp"
+	"--use-old-slice-copy"
+	"-g"
+	"-g0"
+	"--echo-prefix"
+	"--test-filter"
+	"--test-breakpoint"
+	"--test-nosort"
+	"--test-noleak"
+	"--test-nocapture"
+	"--test-quiet"
+	"-l"
+	"-z"
+	"--emit-only"
+	"--panicfn"
+	"--testfn"
+	"--benchfn"
+	"--max-vector-size"
+	"--print-linking"
+	"--benchmarking"
+	"--testing"
+	"--list-attributes"
+	"--list-builtins"
+	"--list-keywords"
+	"--list-operators"
+	"--list-precedence"
+	"--list-project-properties"
+	"--list-manifest-properties"
+	"--list-targets"
+	"--list-type-properties"
+	"--print-output"
+	"--print-input"
+	"--macos-min-version"
+	"--macos-sdk-version"
+	"--android-api"
+	"--use-old-enums"
+	"--list-asm"
+	"--echo-prefix"
+)
+
+# Options that can be completed with a directory
+c3c_dir_options=(
+	"$(c3c_dir_option run-dir)"
+	"$(c3c_dir_option libdir)"
+	"$(c3c_dir_option stdlib)"
+	"$(c3c_dir_option path)"
+	"$(c3c_dir_option output-dir)"
+	"$(c3c_dir_option build-dir)"
+	"$(c3c_dir_option obj-out)"
+	"$(c3c_dir_option script-dir)"
+	"$(c3c_dir_option llvm-out)"
+	"$(c3c_dir_option asm-out)"
+	"$(c3c_dir_option header-output)"
+	"$(c3c_dir_option winsdk)"
+	"$(c3c_dir_option win-vs-dirs)"
+	"$(c3c_dir_option macossdk)"
+	"$(c3c_dir_option linux-crt)"
+	"$(c3c_dir_option linux-crtbegin)"
+	"$(c3c_dir_option android-ndk)"
+	"-L: :_files -/"
+)
+
+# Options that can be completed with either 'yes' or 'no'
+c3c_toggle_options=(
+	"$(c3c_toggle_option safe)"
+	"$(c3c_toggle_option panic-msg)"
+	"$(c3c_toggle_option single-module)"
+	"$(c3c_toggle_option show-backtrace)"
+	"$(c3c_toggle_option ansi)"
+	"$(c3c_toggle_option use-stdlib)"
+	"$(c3c_toggle_option link-libc)"
+	"$(c3c_toggle_option emit-stdlib)"
+	"$(c3c_toggle_option strip-unused)"
+)
+
+# Options that have a variable set of answers
+c3c_multi_options=(
+	"$(c3c_multi_option validation lenient strict obnoxious)"
+	"$(c3c_multi_option trust none include full)"
+	"$(c3c_multi_option optlevelnone less more max)"
+	"$(c3c_multi_option optsize none small tiny)"
+	"$(c3c_multi_option reloc none pic PIC pie PIE)"
+	"$(c3c_multi_option x86cpu baseline ssse6 sse4 avx1 avx2-v1 avx2-v2 avx512 native)"
+	"$(c3c_multi_option x86vec none mmx sse avx avx512 default)"
+	"$(c3c_multi_option riscvfloat none float double)"
+	"$(c3c_multi_option memory-env normal small tiny none)"
+	"$(c3c_multi_option fp-math strict relaxed fast)"
+	"$(c3c_multi_option win64-simd array full)"
+	"$(c3c_multi_option win-debug codeview dwarf)"
+
+	"$(c3c_multi_option wincrt none static-debug static dynamic-debug dynamic)"
+	"$(c3c_multi_option sanitize address memory thread)"
+)
+
+# Remaining options that didn't fit any pattern
+c3c_complex_options=(
+	"--target: :($(c3c_get_platforms))"
+	"--cc: :_files"
+	"--windef: :_files"
+
+	# This works by having the first argument be mandatory, and then offering an optional 2nd one and
+	# setting a state flag that will be evaluated at the end.
+	# Only if this flag is set to custom will completions be offered
+	"--linker:linker:(builtin cc custom)::custom_value:->optional_custom"
+)
+
+# View filters for c3c project view
+c3c_project_view_filters=(
+	"-h"
+	"--help"
+	"-v"
+	"-vv"
+	"--authors"
+	"--version"
+	"--language-revision"
+	"--warnings-used"
+	"--c3l-lib-search-paths"
+	"--c3l-lib-dependencies"
+	"--source-paths"
+	"--output-location"
+	"--default-optimization"
+)
+
+function _c3c {
+	local context state state_descr line
+	typeset -A opt_args
+
+	_arguments -C \
+		"1: :(${c3c_subcommands[*]})" \
+		"--version" \
+		"-h" \
+		"-hh" \
+		"--help" \
+		"--about" \
+		"--list-attributes" \
+		"--list-builtins" \
+		"--list-keywords" \
+		"--list-operators" \
+		"--list-precedence" \
+		"--list-project-properties" \
+		"--list-manifest-properties" \
+		"--list-targets" \
+		"--list-type-properties" \
+		"*::args:->args"
+
+	case ${line[1]} in
+	build | *run | dist | directives | bench | compile* | *lib)
+		_c3c_build
+		;;
+
+	project)
+		_c3c_project
+		;;
+
+	view)
+		_c3c_view
+		;;
+
+	init)
+		_c3c_init
+		;;
+	esac
+}
+
+function _c3c_build {
+	_arguments -C \
+		"${c3c_simple_options[@]}" \
+		"${c3c_multi_options[@]}" \
+		"${c3c_toggle_options[@]}" \
+		"${c3c_complex_options[@]}" \
+		"${c3c_dir_options[@]}"
+
+	if [[ $state = optional_custom && ${opt_args[--linker]} = custom* ]]; then
+		_files
+	fi
+}
+
+function _c3c_project {
+	local line
+
+	_arguments -C \
+		"1:: :(view add-target fetch)" \
+		"-h" \
+		"--help" \
+		"*::args:->args"
+
+	if [[ ${line[1]} = "view" ]]; then
+		_c3c_project_view
+	fi
+}
+
+function _c3c_init {
+	_arguments "--template: :(exe static-lib dynamic-lib)"
+}
+
+function _c3c_project_view {
+	_arguments "${c3c_project_view_filters[@]}"
+}
