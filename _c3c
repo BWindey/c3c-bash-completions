@@ -287,7 +287,7 @@ function _c3c_project {
 	local line
 
 	_arguments -C \
-		"1:: :(view add-target fetch)" \
+		"1: :(view add-target fetch)" \
 		"-h" \
 		"--help" \
 		"*::args:->args"
@@ -298,7 +298,9 @@ function _c3c_project {
 }
 
 function _c3c_init {
-	_arguments "--template: :(exe static-lib dynamic-lib)"
+	_arguments \
+        "1::" \
+        "--template: :(exe static-lib dynamic-lib)"
 }
 
 function _c3c_project_view {
