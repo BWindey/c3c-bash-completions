@@ -198,10 +198,6 @@ function _c3c_complete() {
 				_complete_options "${cur}" "${commands[*]} -..."
 			fi
 			;;
-		project)
-			_complete_options "${cur}" "view add-target fetch -h --help"
-			return
-			;;
 		build|run|dist|directives|bench|clean-run)
 			if [[ "${cur}" == -* ]]; then
 				_complete_options "${cur}" "${options[*]}"
@@ -211,6 +207,18 @@ function _c3c_complete() {
 					_complete_options "${cur}" "${project_targets} -..."
 				fi
 			fi
+			;;
+		compile-*)
+			if [[ "${cur}" == -* ]]; then
+				_complete_options "${cur}" "${options[*]}"
+			else
+				_complete_options "${cur}" "-..."
+				_add_default_completions
+			fi
+			;;
+		project)
+			_complete_options "${cur}" "view add-target fetch -h --help"
+			return
 			;;
 		view)
 			_complete_options "${cur}" "${project_view_filters[*]}"
