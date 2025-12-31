@@ -1,3 +1,7 @@
+log() {
+	echo "$1" >> ~/completion.log
+}
+
 function _complete_option_flag() {
 	already_typed="$1"
 	options="$2"
@@ -208,7 +212,7 @@ function _c3c_complete() {
 				fi
 			fi
 			;;
-		compile-*)
+		compile-*|static-lib|dynamic-lib)
 			if [[ "${cur}" == -* ]]; then
 				_complete_options "${cur}" "${options[*]}"
 			else
