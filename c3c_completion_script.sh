@@ -1,7 +1,3 @@
-log() {
-	echo "$1" >> ~/completion.log
-}
-
 function _complete_option_flag() {
 	already_typed="$1"
 	options="$2"
