@@ -17,7 +17,7 @@ function _add_default_completions() {
 	# Filter empty otherwise there would be empty thing to complete and that
 	# prevents actual completion
 	if [[ "${_DEFAULTS[*]}" != "" ]]; then
-		COMPREPLY+=("${_DEFAULTS[*]}")
+		COMPREPLY+=("${_DEFAULTS[@]}")
 	fi
 }
 
