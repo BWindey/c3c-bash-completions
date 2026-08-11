@@ -90,6 +90,7 @@ function _c3c_complete() {
 		"--build-dir"
 		"--obj-out"
 		"--script-dir"
+		"--exec-dir"
 		"--llvm-out"
 		"--asm-out"
 		"--header-output"
@@ -104,11 +105,19 @@ function _c3c_complete() {
 		"--panic-msg="
 		"--optlevel="
 		"--optsize="
+		"--unroll-loops="
+		"--loop-vectorize="
+		"--slp-vectorize="
+		"--merge-functions="
 		"--single-module="
 		"--show-backtrace="
 		"--lsp"
-		"--use-old-slice-copy"
-		"--use-old-enums"
+		"--print-large-functions="
+		"--warn-deadcode="
+		"--warn-methodvisibility="
+		"--warn-methodsnotresolved="
+		"--warn-deprecation="
+		"--warn-builtin="
 		"-g"
 		"-g0"
 		"--ansi="
@@ -119,6 +128,8 @@ function _c3c_complete() {
 		"--test-noleak"
 		"--test-nocapture"
 		"--test-quiet"
+		"--test-log-level="
+		"--benchmark-csv-report"
 		"-l"
 		"-L"
 		"-z"
@@ -132,15 +143,19 @@ function _c3c_complete() {
 		"--testfn"
 		"--benchfn"
 		"--reloc="
+		"--cpu-flags"
 		"--x86cpu="
 		"--x86vec="
-		"--riscvfloat="
+		"--riscv-abi="
+		"--riscv-cpu="
 		"--memory-env="
 		"--strip-unused="
 		"--fp-math="
 		"--win64-simd="
 		"--win-debug="
 		"--max-vector-size"
+		"--max-stack-object-size"
+		"--max-macro-iterations"
 		"--print-linking"
 		"--benchmarking"
 		"--testing"
@@ -156,17 +171,20 @@ function _c3c_complete() {
 		"--list-asm"
 		"--print-output"
 		"--print-input"
-		"--winsdk"
+		"--win-sdk"
 		"--wincrt="
 		"--windef"
 		"--win-vs-dirs"
+		"--win-subsystem="
 		"--macossdk"
 		"--macos-min-version"
 		"--macos-sdk-version"
+		"--linux-libc="
 		"--linux-crt"
 		"--linux-crtbegin"
 		"--android-ndk"
 		"--android-api"
+		"--bsd-sysroot"
 		"--sanitize="
 	)
 
@@ -313,6 +331,9 @@ function _c3c_complete() {
 		--optsize=*)
 			opts=( "none" "small" "tiny" )
 			;;
+		--test-log-level=*)
+			opts=( "verbose" "debug" "info" "warn" "error" "critical" )
+			;;
 		--linker=*)
 			opts=( "builtin" "cc" "custom" )
 			;;
@@ -325,8 +346,11 @@ function _c3c_complete() {
 		--x86vec=*)
 			opts=( "none" "mmx" "sse" "avx" "avx512" "default"  )
 			;;
-		--riscvfloat=*)
-			opts=( "none" "float" "double" )
+		--riscv-abi=*)
+			opts=( "int-only" "float" "double" )
+			;;
+		--riscv-cpu=*)
+			opts=( "rvi" "rvimac" "rvimafc" "rvgc" "rvgcv" )
 			;;
 		--memory-env=*)
 			opts=( "normal" "small" "tiny" "none" )
@@ -343,15 +367,29 @@ function _c3c_complete() {
 		--wincrt=*)
 			opts=( "none" "static-debug" "static" "dynamic-debug" "dynamic" )
 			;;
+		--win-subsystem=*)
+			opts=(
+				"console" "windows" "native" "posix" "boot" "efi-app"
+				"efi-boot" "efi-rom" "efi-runtime"
+			)
+			;;
+		--linux-libc=*)
+			opts=( "host" "gnu" "musl" )
+			;;
 		--sanitize=*)
 			opts=( "address" "memory" "thread" )
 			;;
 		# Yes or no flags
-		--safe=*|--panic-msg=*|--single-module=*|--show-bactrace=*|  \
-			--ansi=*|--use-stdlib=*|--link-libc=*|--emit-stdlib=*| \
-			--strip-unused=*)
+		--safe=*|--panic-msg=*|--unroll-loops=*|--loop-vectorize=*| \
+			--slp-vectorize=*|--merge-functions=*|--single-module=*| \
+			--show-bactrace=*|--ansi=*|--use-stdlib=*|--link-libc=*| \
+			--emit-stdlib=*|--strip-unused=*)
 			opts=( "yes" "no" )
 			;;
+		# Warning flags
+		--print-large-functions=*|--warn-deadcode=*|--warn-methodvisibility=*| \
+			--warn-methodsnotresolved=*|--warn-deprecation=*|--warn-builtin=*)
+			opts=( "yes" "no" "error" )
 	esac
 	if (( "${#opts[*]}" >= 1)); then
 		_complete_option_flag "${cur}" "${opts[*]}"
