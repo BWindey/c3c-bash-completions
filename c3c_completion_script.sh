@@ -191,6 +191,41 @@ function _c3c_complete() {
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 
+	# Check first if we can complete 'fetch-sdk' subcommand
+	if [[ "${COMP_WORDS[*]}" == *fetch-sdk* ]]; then
+		case "${prev}" in
+			windows)
+				fetch_win_flags=(
+					"--accept-license"
+					"--show-versions"
+					"--msvc-version"
+					"--sdk-version"
+					"--arch"
+				)
+				_complete_options "${cur}" "${fetch_win_flags[*]}"
+				return
+				;;
+			macos)
+				fetch_mac_flags=(
+					"--accept-license"
+					"--list"
+					"--sdk-version"
+				)
+				_complete_options "${cur}" "${fetch_mac_flags[*]}"
+				return
+				;;
+			android)
+				_complete_options "${cur}" "--accept-license"
+				return
+				;;
+			--arch)
+				_complete_options "${cur}" "x64 arm64"
+				return
+				;;
+		esac
+	fi
+
+	# Now general completion
 	case "${prev}" in
 		# Main command
 		c3c)
