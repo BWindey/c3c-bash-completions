@@ -41,6 +41,8 @@ function _c3c_complete() {
 		"dynamic-lib"
 		"vendor-fetch"
 		"project"
+		"fetch-sdk"
+		"docgen"
 	)
 	options=(
 		"-h"
@@ -222,6 +224,10 @@ function _c3c_complete() {
 			;;
 		view)
 			_complete_options "${cur}" "${project_view_filters[*]}"
+			return
+			;;
+		fetch-sdk)
+			_complete_options "${cur}" "windows macos android -h --help"
 			return
 			;;
 		--template) # TODO: this only possible after `init`
